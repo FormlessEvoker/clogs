@@ -1,0 +1,2 @@
+2001:db8:42::10 [04/Mar/2026:09:10:18 -0600] port:18444 "PUT /v1/tenants/tenant-slate/resources/resource-100?replace=true HTTP/1.1" 201 1024
+198.51.100.44 [04/Mar/2026:09:10:19 -0600] port:18444 "HEAD /v1/tenants/tenant-lime/resources/resource-002?fields=none HTTP/1.1" 204 0

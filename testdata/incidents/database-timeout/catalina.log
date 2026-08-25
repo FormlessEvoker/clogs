@@ -1,0 +1,4 @@
+11-Aug-2026 16:31:40.000 SEVERE [worker-3] com.example.DatabaseProbe.run database timeout detected
+java.sql.SQLTimeoutException: synthetic database timeout
+Caused by: java.net.SocketTimeoutException: synthetic socket timeout
+11-Aug-2026 16:32:30.000 INFO [worker-3] com.example.Lifecycle.start service recovered

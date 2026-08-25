@@ -1,0 +1,4 @@
+Aug 11, 2026 4:30:00 PM com.example.OrderService lookup
+INFO: database query completed
+Aug 11, 2026 4:31:35 PM com.example.OrderService lookup
+ERROR: database query timed out

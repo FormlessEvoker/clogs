@@ -1,0 +1,8 @@
+startup output before Catalina record header
+08-Mar-2026 01:59:59.500 INFO [bootstrap] io.neutral.container.Lifecycle.start Starting synthetic container service
+08-Mar-2026 03:00:00.000 WARNING [shutdown-hook] io.neutral.container.Lifecycle.stop Stopping synthetic container service
+08-Mar-2026 03:00:00.500 SEVERE [http-worker-3] io.neutral.gateway.RequestHandler.handle Response delivery failed
+java.lang.IllegalStateException: response channel unavailable
+	at io.neutral.gateway.RequestHandler.handle(RequestHandler.java:42)
+Caused by: java.io.IOException: downstream link unavailable
+	at io.neutral.transport.Client.send(Client.java:17)

@@ -1,0 +1,40 @@
+# Local operational logs and downloaded collections. Sanitized test fixtures remain allowed.
+/downloads/
+*.log
+*.log.*
+!testdata/
+!testdata/**/*.log
+!testdata/**/*.log.*
+
+# SQLite databases and their sidecar files.
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+
+# Generated incident reports may embed production evidence.
+/reports/
+/incident-report*.html
+
+# Local build and test artifacts.
+/bin/
+coverage.out
+*.part
+
+# Repowise generated index and runtime state; retain shared configuration.
+/.repowise/*
+!/.repowise/config.yaml
+
+# Local editor and MCP client configuration.
+/.vscode/
+/.mcp.json
+
+# Binary produced by `go build ./cmd/clogs` in the repository root.
+/clogs
+
+# Local Codex CLI configuration (contains machine-specific absolute paths).
+/.codex/
+
+# Repowise-generated agent documentation (regenerated locally on reindex).
+/AGENTS.md
+/.claude/

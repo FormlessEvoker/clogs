@@ -1,0 +1,2 @@
+08-Mar-2026 03:00:00.750 FINE [background-1] io.neutral.cache.Refresher.refresh Refreshed synthetic cache entry
+08-Mar-2026 03:00:01.000 INFO [audit-2] io.neutral.audit.Record.write Wrote synthetic audit record

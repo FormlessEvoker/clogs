@@ -1,0 +1,2 @@
+2001:db8:42::10 - - [04/Mar/2026:09:10:14 -0600] "OPTIONS * HTTP/1.0" 204 0
+198.51.100.44 edge-proxy deployer [04/Mar/2026:09:10:15 -0600] "PUT /api/config/current HTTP/1.1" 201 1024

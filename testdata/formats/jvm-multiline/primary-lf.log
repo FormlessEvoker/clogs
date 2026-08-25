@@ -1,0 +1,9 @@
+prelude: waiting for record header
+Feb 3, 2026 2:15:17 PM net.neutral.Gateway handleRequest
+INFO: accepted synthetic request protocol type: http2
+java.lang.IllegalStateException: primary operation failed
+	at net.neutral.Gateway.handleRequest(Gateway.java:42)
+Caused by: java.io.IOException: downstream link unavailable
+	at net.neutral.Transport.open(Transport.java:17)
+Feb 3, 2026 2:15:20 PM net.neutral.Gateway close
+WARNING: completed with fallback

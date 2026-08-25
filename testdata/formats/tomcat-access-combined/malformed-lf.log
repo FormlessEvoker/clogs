@@ -1,0 +1,4 @@
+198.51.100.20 - - [32/Mar/2026:09:20:16 -0600] "GET /bad-time HTTP/1.1" 200 10 "-" "FixtureBrowser/1.0"
+198.51.100.21 - - [04/Mar/2026:09:20:17 -0600] "GET /missing-version" 200 11 "-" "FixtureBrowser/1.0"
+198.51.100.22 - - [04/Mar/2026:09:20:18 -0600] "PATCH /bad-status HTTP/1.1" 20 12 "-" "FixtureBrowser/1.0"
+198.51.100.23 - - [04/Mar/2026:09:20:19 -0600] "PUT /bad-bytes HTTP/1.1" 201 unknown "-" "FixtureBrowser/1.0"

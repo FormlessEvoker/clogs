@@ -1,0 +1,3 @@
+198.51.100.52 edge-proxy neutral-user [04/Mar/2026:09:20:11 -0600] "GET /assets/report?view=full HTTP/1.1" 200 768 "https://portal.example.test/search?q=\"quoted\"&mode=full" "FixtureBrowser/1.0 (backslash\\client; \"quoted\")"
+2001:db8:52::9 - - [04/Mar/2026:09:20:12 -0600] "POST /api/jobs?mode=sync HTTP/2" 404 - "-" "-"
+203.0.113.28 gateway batch-service [04/Mar/2026:09:20:13 -0600] "DELETE /api/jobs/job-002?force=true HTTP/1.1" 503 0 "-" "LoadProbe/1.0"

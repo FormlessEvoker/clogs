@@ -1,0 +1,80 @@
+# Example clogs configuration.
+#
+# Copy to `clogs.yml` in your incident workspace. Clogs searches the current
+# directory and each parent for `clogs.yml`, then `clogs.yaml`, and resolves
+# relative paths against the directory holding the file it found — not the
+# process working directory.
+#
+# Precedence, highest first:
+#
+#   explicit CLI flag  >  remote.servers.<name>  >  remote.defaults
+#                      >  <command> section      >  defaults
+#
+# Unknown keys are rejected, so a typo fails loudly instead of being ignored.
+
+defaults:
+  # Required for JVM application and Catalina logs: their timestamps carry no
+  # UTC offset. Use the timezone of the server that produced the logs.
+  timezone: America/Chicago
+
+  # Collapses variable path segments so failure rates group by route rather
+  # than fragmenting across every distinct value. Without this, each site is
+  # counted as its own route.
+  #
+  #   /svc/v4/api/site/site-a/orders  ->  /svc/v4/api/site/{site}/orders
+  #   /svc/v4/api/site/site-b/orders  ->  /svc/v4/api/site/{site}/orders
+  #
+  # Literal segments must match exactly; `{name}` matches any one non-empty
+  # segment. A template matches a prefix, so trailing segments are preserved.
+  # `{site}` is special: its captured value is stored as the event's site.
+  route_templates:
+    - /svc/v4/api/site/{site}
+
+# Workspace layout. All paths are relative to this file.
+paths:
+  downloads_root: ./downloads
+  db_root: ./data/db
+  source_root: ./data/source
+  reports_root: ./reports
+
+# Per-command defaults. Each inherits from `defaults` above.
+ingest:
+  store_raw: true
+  strict: false
+
+query:
+  bucket: 1m
+  quiet_period: 30s
+  pre_window: 30s
+  correlation_window: 5s
+
+report:
+  bucket: 1m
+  correlation_window: 5s
+
+export:
+  format: ndjson
+
+# Remote collection over the workstation's OpenSSH client. Clogs never handles
+# credentials — configure keys, agents, known_hosts, aliases, and ProxyJump in
+# your ~/.ssh/config as usual.
+remote:
+  defaults:
+    dir: /opt/tomcat/logs
+    since: 6h
+    out: ./downloads
+    # Repeat --pattern on the command line to replace this list entirely.
+    pattern:
+      - application.log*
+      - access_log*.log
+      - catalina.*.log
+
+  # Server keys match the destination argument exactly. Any setting valid
+  # above may be overridden per server.
+  servers:
+    app-01.example.test:
+      timezone: America/New_York
+      dir: /srv/app/logs
+
+    app-02.example.test:
+      dir: /var/log/tomcat
