@@ -29,7 +29,17 @@ jobs:
             exit 0
           fi
 
-          # GitHub rejects an auto merge request when the pull request is
-          # already mergeable, because there is nothing left to wait for.
-          echo "::warning::Could not arm auto merge. Trying a direct merge in case every requirement is already met."
+          # `--auto` fails both when the pull request is already mergeable
+          # (nothing left to wait for) and when "Allow auto-merge" is off for
+          # the repository. Only the first case is safe to fall through on:
+          # confirm mergeStateStatus is CLEAN ourselves rather than assuming
+          # the failure reason, so a disabled auto-merge setting can't turn
+          # every approval into an unconditional merge that skips checks.
+          echo "::warning::Could not arm auto merge. Checking whether the pull request is already mergeable."
+          state=$(gh pr view "$PR_URL" --json mergeStateStatus --jq .mergeStateStatus)
+          if [ "$state" != "CLEAN" ]; then
+            echo "::error::Auto merge could not be armed and the pull request is not mergeable yet (state: $state)."
+            exit 1
+          fi
+
           gh pr merge --squash "$PR_URL"

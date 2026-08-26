@@ -40,6 +40,32 @@ jobs:
         run: |
           set -euo pipefail
 
+          # for-each-ref rather than a pipe into head: closing the pipe early
+          # would trip pipefail once the repository has many tags.
+          latest_tag() {
+            git for-each-ref --sort=-v:refname --count="${1:-1}" \
+              --format='%(refname:short)' 'refs/tags/v[0-9]*'
+          }
+
+          latest=$(latest_tag)
+
+          # A tag with no published release means a previous run tagged the
+          # commit and then died before publishing (archive build failure,
+          # `gh` outage, runner eviction). Finish that release instead of
+          # computing a new one, so re-running this workflow is always the
+          # fix for a stuck release rather than a manual out-of-band tag.
+          if [ -n "$latest" ] && ! gh release view "$latest" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::notice::Tag $latest exists with no published release; resuming it instead of cutting a new one."
+            previous=$(latest_tag 2 | sed -n '2p')
+            {
+              echo "release=true"
+              echo "version=$latest"
+              echo "previous=$previous"
+              echo "tag_exists=true"
+            } >>"$GITHUB_OUTPUT"
+            exit 0
+          fi
+
           pr=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq '.[0].number // empty')
           if [ -z "$pr" ]; then
             echo "::notice::No pull request produced this commit, so there is nothing to release."
@@ -59,23 +85,14 @@ jobs:
           fi
           bump=$1
 
-          # for-each-ref rather than a pipe into head: closing the pipe early
-          # would trip pipefail once the repository has many tags.
-          current=$(git for-each-ref --sort=-v:refname --count=1 \
-            --format='%(refname:short)' 'refs/tags/v[0-9]*')
-          next=$(./scripts/next-version.sh "$current" "$bump")
-          echo "Pull request #$pr is a $bump bump: ${current:-no tags} -> $next"
-
-          if git rev-parse -q --verify "refs/tags/$next" >/dev/null; then
-            echo "::notice::Tag $next already exists, so this release has already been published."
-            echo "release=false" >>"$GITHUB_OUTPUT"
-            exit 0
-          fi
+          next=$(go run ./cmd/nextversion "$latest" "$bump")
+          echo "Pull request #$pr is a $bump bump: ${latest:-no tags} -> $next"
 
           {
             echo "release=true"
             echo "version=$next"
-            echo "previous=$current"
+            echo "previous=$latest"
+            echo "tag_exists=false"
           } >>"$GITHUB_OUTPUT"
 
       # A tag must never point at a commit that does not pass its own checks,
@@ -89,7 +106,7 @@ jobs:
         run: make release-build VERSION=${{ steps.version.outputs.version }}
 
       - name: Tag the release
-        if: steps.version.outputs.release == 'true'
+        if: steps.version.outputs.release == 'true' && steps.version.outputs.tag_exists != 'true'
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |

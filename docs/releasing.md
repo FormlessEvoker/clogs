@@ -18,6 +18,14 @@ requirement rather than a convention.
 
 Nothing between steps 4 and 5 needs a human.
 
+The version arithmetic itself — computing the next tag from the current one
+and a bump — lives in `internal/semver`, with `go test ./internal/semver`
+covering it, rather than in the workflow's shell. `cmd/nextversion` is the
+thin CLI the workflow calls: `go run ./cmd/nextversion <current-tag>
+<major|minor|patch>`. `scripts/build-release.sh` stays a shell script; it is
+orchestration around `go build`, `tar`, and `zip` rather than logic worth
+unit testing.
+
 ## Choosing the label
 
 | Label | `v1.4.2` becomes | Use it for |
@@ -123,8 +131,13 @@ more than one version label. That should be impossible while `semver-label` is a
 required check, so it means the check was bypassed. Fix the labels and re-run
 the workflow.
 
-**The tag already exists.** The job notices and exits without publishing, so
-re-running it is safe.
+**A release job died partway through.** Re-run it. The version step first
+checks whether the latest tag has a published GitHub release; if a previous
+run tagged the commit and then failed before publishing (a failed archive
+build, a `gh` outage, a killed runner), it resumes that same version — same
+tag, same archives rebuilt, no new tag created — instead of computing a new
+one. If the latest tag already has a release, re-running is a safe no-op:
+there is nothing left to do.
 
 **Cutting a release by hand.** Push an annotated `vX.Y.Z` tag and run
 `make release-build VERSION=vX.Y.Z`, then attach `bin/dist/*` to a release
