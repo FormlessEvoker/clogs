@@ -36,7 +36,7 @@ fi
 
 # Documentation and fixtures may reference only the RFC 2606 example domains.
 if matches=$(scan -o 'https?://[^[:space:])"'"'"'<>]+' |
-  grep -vE '://([A-Za-z0-9-]+\.)*(example\.(com|net|org|test)|rfc-editor\.org|repowise\.dev)([:/]|$)' || true); then
+  grep -vE '://([A-Za-z0-9-]+\.)*(example\.(com|net|org|test)|rfc-editor\.org|repowise\.dev|github\.com|go\.dev)([:/]|$)' || true); then
   [[ -n $matches ]] && report 'external URL' "$matches"
 fi
 
