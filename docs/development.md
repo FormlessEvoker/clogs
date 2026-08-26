@@ -24,6 +24,8 @@ make check          # everything CI runs
 | `fmt-check` | fails if anything is unformatted |
 | `content-check` | the prohibited-content gate (see below) |
 | **`check`** | **`fmt-check` + `lint` + `test` + `test-race` + `content-check`** |
+| `cross-build` | compiles every release target, without packaging |
+| `release-build` | builds and packages every release target into `./bin/dist` |
 | `clean` | removes `./bin` |
 
 `make check` is exactly what CI runs. If it passes locally it passes there.
@@ -34,6 +36,9 @@ Version metadata is injected at link time:
 make build VERSION=v0.1.0
 ./bin/clogs version        # clogs v0.1.0
 ```
+
+Releases are cut automatically from a label on the merged pull request. See
+[releasing.md](releasing.md).
 
 ## Layout
 
