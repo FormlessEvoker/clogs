@@ -1,0 +1,56 @@
+name: Semantic version label
+
+# The release that follows a merge takes its version bump from this label, so
+# the label is a merge requirement rather than a convention. This lives apart
+# from CI so that adding or removing a label re-runs only this check instead of
+# the whole test suite.
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, labeled, unlabeled, ready_for_review]
+  # Reports the same check name on merge groups, so a merge queue would not
+  # wait forever for a check that only pull requests can produce.
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  semver-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require exactly one major, minor, or patch label
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            echo "Not a pull request event; nothing to check."
+            exit 0
+          fi
+
+          # Split on commas only. Label names may contain spaces.
+          bumps=""
+          IFS=','
+          for label in $LABELS; do
+            case "$label" in
+              major|minor|patch) bumps="$bumps $label" ;;
+            esac
+          done
+          unset IFS
+
+          # Split the collected labels into positional parameters to count them.
+          set -- $bumps
+          case "$#" in
+            1)
+              echo "This pull request will release a $1 version bump."
+              ;;
+            0)
+              echo "::error::Label this pull request major, minor, or patch. The release workflow reads that label to decide the next version tag."
+              exit 1
+              ;;
+            *)
+              echo "::error::Found $# version labels ($*). Exactly one of major, minor, or patch is allowed."
+              exit 1
+              ;;
+          esac

@@ -26,6 +26,10 @@ It reports temporal proximity and never claims causation.
 
 ## Install
 
+Download a prebuilt binary for macOS, Windows, or Linux from the
+[latest release](https://github.com/FormlessEvoker/clogs/releases/latest), or
+build it yourself:
+
 ```sh
 go install github.com/FormlessEvoker/clogs/cmd/clogs@latest
 ```
