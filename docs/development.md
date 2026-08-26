@@ -61,8 +61,8 @@ See [architecture.md](architecture.md) for why it is shaped this way.
 
 ## Testing
 
-Tests are the actual behavior contract — prefer reading them over the archived
-[contracts](contracts/), which are unaudited.
+Tests are the actual behavior contract. Where documentation and a test
+disagree about what Clogs does, the test is right.
 
 ```sh
 go test ./internal/parser/...           # one area

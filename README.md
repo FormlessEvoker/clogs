@@ -133,7 +133,6 @@ a stable signature for grouping recurrences.
 - [Configuration](docs/configuration.md) — `clogs.yml` reference and precedence
 - [Architecture](docs/architecture.md) — how it works, and why it's built this way
 - [Development](docs/development.md) — building, testing, and project layout
-- [Contracts](docs/contracts/) — archived behavior notes, unaudited
 
 ## Privacy
 

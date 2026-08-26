@@ -21,9 +21,8 @@
 coverage.out
 *.part
 
-# Repowise generated index and runtime state; retain shared configuration.
-/.repowise/*
-!/.repowise/config.yaml
+# Repowise generated index, runtime state, and configuration.
+/.repowise/
 
 # Local editor and MCP client configuration.
 /.vscode/
@@ -38,3 +37,7 @@ coverage.out
 # Repowise-generated agent documentation (regenerated locally on reindex).
 /AGENTS.md
 /.claude/
+
+# Archived behavior contracts from an abandoned plan. Kept locally for a
+# later audit; they describe behavior that no longer matches the code.
+/docs/contracts/

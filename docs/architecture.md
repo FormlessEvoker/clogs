@@ -177,5 +177,4 @@ with one operator:
 - A generic comparison engine (`clogs compare`) over arbitrary windows.
 
 An earlier plan specified all of these across 85 tasks. It was abandoned in
-favor of the configuration work that actually shipped. The archived
-[contracts](contracts/) are the surviving fragment of it.
+favor of the configuration work that actually shipped.
